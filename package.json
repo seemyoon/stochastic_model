@@ -8,7 +8,6 @@
     "start": "node ./src/model.js"
   },
   "dependencies": {
-    "chart.js": "^3.7.1",
     "simple-statistics": "^7.8.7"
   },
   "author": "Olexandr Semenets",
