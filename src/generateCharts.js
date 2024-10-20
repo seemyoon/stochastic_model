@@ -4,6 +4,9 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     // Округлення температур до цілих чисел
     const roundedTemperatures = temperatures.map(temp => Math.round(temp));
 
+    // Створюємо діапазон від -10 до 12
+    const tempRange = Array.from({ length: 23 }, (_, i) => -10 + i); // від -10 до 12 включно
+
     // Функція для отримання даних гістограми
     const getHistogramData = (data) => {
         const histogramData = {};
@@ -16,8 +19,20 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     const roundedFrequencyHistogram = getHistogramData(roundedTemperatures);
 
     // Сортуємо дані
-    const sortedRoundedKeys = Object.keys(roundedFrequencyHistogram).sort((a, b) => a - b);
+    const sortedRoundedKeys = tempRange.map(key => key.toString());
     const sortedRoundedValues = sortedRoundedKeys.map(key => roundedFrequencyHistogram[key] || 0);
+
+    // Округлені значення середньої температури
+    const uniqueTemperatures = Array.from(new Set(roundedTemperatures));
+    const averageTemperatures = uniqueTemperatures.sort((a, b) => a - b).map(temp => temp.toString());
+
+    // Кумулятивна частота для гістограми
+    const cumulativeTempData = {};
+    let cumulativeSum = 0;
+    sortedRoundedKeys.forEach(key => {
+        cumulativeSum += roundedFrequencyHistogram[key] || 0;
+        cumulativeTempData[key] = cumulativeSum;
+    });
 
     const chartHTML = `
     <!DOCTYPE html>
@@ -118,7 +133,7 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
             });
 
             // Кумулятивна гістограма температур
-            const cumulativeTempData = ${JSON.stringify(cumulativeFrequencyHistogram)};
+            const cumulativeTempData = ${JSON.stringify(cumulativeTempData)};
             new Chart(ctx3, {
                 type: 'line',
                 data: {
