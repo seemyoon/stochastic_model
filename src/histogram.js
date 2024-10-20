@@ -40,3 +40,14 @@ export const calculateHistogram = (data) => {
         cumulativeRelativeFrequencyHistogram
     };
 };
+
+// Симуляція випадкового блукання температури
+export const simulateRandomWalk = (temperatures) => {
+    const values = [temperatures[0]];  // Початкове значення з першої температури
+    for (let i = 1; i < temperatures.length; i++) {
+        const change = Math.random() < 0.5 ? -1 : 1;  // Випадкова зміна (-1 або 1)
+        const newValue = values[values.length - 1] + change;
+        values.push(newValue);
+    }
+    return values;
+};
