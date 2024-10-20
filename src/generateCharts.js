@@ -36,6 +36,7 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
         cumulativeTempData[key] = cumulativeSum;
     });
 
+    // Генеруємо HTML-файл
     const chartHTML = `
     <!DOCTYPE html>
     <html lang="uk">
