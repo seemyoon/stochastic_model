@@ -1,8 +1,8 @@
 import fs from 'fs';
 
 export const generateCharts = (temperatures, randomWalkValues, frequencyHistogram, cumulativeFrequencyHistogram, relativeFrequencyHistogram, cumulativeRelativeFrequencyHistogram) => {
-    // Округлення температур до найближчих 5 градусів
-    const roundedTemperatures = temperatures.map(temp => Math.round(temp / 5) * 5);
+    // Округлення температур до цілих чисел
+    const roundedTemperatures = temperatures.map(temp => Math.round(temp));
 
     // Створюємо діапазон від -10 до 12
     const tempRange = Array.from({ length: 23 }, (_, i) => -10 + i); // від -10 до 12 включно

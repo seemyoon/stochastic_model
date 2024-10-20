@@ -4,10 +4,11 @@ export const calculateHistogram = (data) => {
 
     // Розрахунок гістограми частот
     data.forEach(value => {
-        if (frequencyHistogram[value]) {
-            frequencyHistogram[value]++;
+        const roundedValue = Math.round(value);
+        if (frequencyHistogram[roundedValue]) {
+            frequencyHistogram[roundedValue]++;
         } else {
-            frequencyHistogram[value] = 1;
+            frequencyHistogram[roundedValue] = 1;
         }
     });
 
