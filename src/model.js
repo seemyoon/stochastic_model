@@ -1,7 +1,7 @@
 import { calculateHistogram } from './histogram.js';
 import { generateCharts } from './generateCharts.js';
 import fs from 'fs';
-import * as ss from 'simple-statistics';
+import * as ss from 'simple-statistics'; // Імпорт бібліотеки simple-statistics
 
 // Зчитування даних з файлу weather_data.csv
 const readWeatherData = (filePath) => {
@@ -33,15 +33,20 @@ const mode = ss.mode(temperatures);
 const variance = ss.variance(temperatures);
 const rangeValue = maxValue - minValue;
 
-// Виведення результатів дескриптивного аналізу
-console.log(`Середнє: ${average}`);
-console.log(`Медіана: ${median}`);
-console.log(`Стандартне відхилення: ${stdDev}`);
-console.log(`Мінімум: ${minValue}`);
-console.log(`Максимум: ${maxValue}`);
-console.log(`Мода: ${mode}`);
-console.log(`Дисперсія: ${variance}`);
-console.log(`Розмах: ${rangeValue}`);
+// Формування рядка результатів
+const results = `
+Середнє: ${average}
+Медіана: ${median}
+Стандартне відхилення: ${stdDev}
+Мінімум: ${minValue}
+Максимум: ${maxValue}
+Мода: ${mode}
+Дисперсія: ${variance}
+Розмах: ${rangeValue}
+`;
+
+// Запис результатів у файл results.txt
+fs.writeFileSync('./output/results.txt', results);
 
 // Розрахунок гістограми
 const { frequencyHistogram, cumulativeFrequencyHistogram, relativeFrequencyHistogram, cumulativeRelativeFrequencyHistogram } = calculateHistogram(temperatures);
