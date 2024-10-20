@@ -8,9 +8,8 @@
     "start": "node ./src/model.js"
   },
   "dependencies": {
-    "mathjs": "^11.2.0",
     "chart.js": "^3.7.1",
-    "papaparse": "^5.3.0"
+    "simple-statistics": "^7.8.7"
   },
   "author": "Olexandr Semenets",
   "license": "ISC"

@@ -1,6 +1,7 @@
 import { calculateHistogram } from './histogram.js';
 import { generateCharts } from './generateCharts.js';
 import fs from 'fs';
+import * as ss from 'simple-statistics';
 
 // Зчитування даних з файлу weather_data.csv
 const readWeatherData = (filePath) => {
@@ -22,24 +23,14 @@ const readWeatherData = (filePath) => {
 // Зчитування даних
 const temperatures = readWeatherData('./data/weather_data.csv');
 
-// Дескриптивний аналіз
-const average = temperatures.reduce((sum, val) => sum + val, 0) / temperatures.length;
-
-const median = (() => {
-    const sorted = [...temperatures].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-})();
-
-const stdDev = Math.sqrt(temperatures.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / temperatures.length);
-
-const minValue = Math.min(...temperatures);
-const maxValue = Math.max(...temperatures);
-const mode = temperatures.sort((a, b) =>
-    temperatures.filter(v => v === a).length - temperatures.filter(v => v === b).length
-).pop();
-
-const variance = temperatures.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / temperatures.length;
+// Дескриптивний аналіз з використанням simple-statistics
+const average = ss.mean(temperatures);
+const median = ss.median(temperatures);
+const stdDev = ss.standardDeviation(temperatures);
+const minValue = ss.min(temperatures);
+const maxValue = ss.max(temperatures);
+const mode = ss.mode(temperatures);
+const variance = ss.variance(temperatures);
 const rangeValue = maxValue - minValue;
 
 // Виведення результатів дескриптивного аналізу
