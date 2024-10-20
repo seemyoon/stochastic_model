@@ -5,7 +5,7 @@ export const calculateHistogram = (data) => {
     // Розрахунок гістограми частот
     data.forEach(value => {
         const roundedValue = Math.round(value);
-        if (!isNaN(roundedValue)) { // Додано перевірку на NaN
+        if (!isNaN(roundedValue)) {
             if (frequencyHistogram[roundedValue]) {
                 frequencyHistogram[roundedValue]++;
             } else {
@@ -42,15 +42,4 @@ export const calculateHistogram = (data) => {
         relativeFrequencyHistogram,
         cumulativeRelativeFrequencyHistogram
     };
-};
-
-// Симуляція випадкового блукання температури
-export const simulateRandomWalk = (temperatures) => {
-    const values = [temperatures[0]];  // Початкове значення з першої температури
-    for (let i = 1; i < temperatures.length; i++) {
-        const change = Math.random() < 0.5 ? -1 : 1;  // Випадкова зміна (-1 або 1)
-        const newValue = values[values.length - 1] + change;
-        values.push(newValue);
-    }
-    return values;
 };

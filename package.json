@@ -12,6 +12,6 @@
     "chart.js": "^3.7.1",
     "papaparse": "^5.3.0"
   },
-  "author": "Ваше ім'я",
+  "author": "Olexandr Semenets",
   "license": "ISC"
 }

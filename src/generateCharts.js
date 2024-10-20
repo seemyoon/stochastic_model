@@ -11,7 +11,7 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     const getHistogramData = (data) => {
         const histogramData = {};
         data.forEach(value => {
-            if (!isNaN(value)) { // Додано перевірку на NaN
+            if (!isNaN(value)) {
                 histogramData[value] = (histogramData[value] || 0) + 1;
             }
         });
@@ -24,10 +24,6 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     const sortedRoundedKeys = tempRange.map(key => key.toString());
     const sortedRoundedValues = sortedRoundedKeys.map(key => roundedFrequencyHistogram[key] || 0);
 
-    // Округлені значення середньої температури
-    const uniqueTemperatures = Array.from(new Set(roundedTemperatures));
-    const averageTemperatures = uniqueTemperatures.sort((a, b) => a - b).map(temp => temp.toString());
-
     // Кумулятивна частота для гістограми
     const cumulativeTempData = {};
     let cumulativeSum = 0;
@@ -36,7 +32,14 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
         cumulativeTempData[key] = cumulativeSum;
     });
 
-    // Генеруємо HTML-файл
+    // Відносна частота
+    const relativeTempData = {};
+    const relativeSortedData = tempRange.map(key => {
+        const count = relativeFrequencyHistogram[key] || 0;
+        relativeTempData[key] = count;
+        return count;
+    });
+
     const chartHTML = `
     <!DOCTYPE html>
     <html lang="uk">
@@ -66,13 +69,8 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
         </style>
     </head>
     <body>
-        <h1>Стахастична модель та гістограми</h1>
+        <h1>Стахостична модель та гістограми</h1>
         
-        <div>
-            <h2>Симуляція випадкового блукання температури</h2>
-            <canvas id="randomWalkHistogram" width="400" height="200"></canvas>
-        </div>
-
         <h2>Гістограми температур</h2>
         <div class="chart-container">
             <div class="chart-box">
@@ -90,43 +88,10 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
         </div>
 
         <script>
-            const ctx1 = document.getElementById('randomWalkHistogram').getContext('2d');
             const ctx2 = document.getElementById('tempHistogram').getContext('2d');
             const ctx3 = document.getElementById('cumulativeTempHistogram').getContext('2d');
             const ctx4 = document.getElementById('relativeTempHistogram').getContext('2d');
             const ctx5 = document.getElementById('cumulativeRelativeTempHistogram').getContext('2d');
-
-            // Симуляція випадкового блукання температури
-            new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: Array.from({ length: ${randomWalkValues.length} }, (_, i) => i),
-                    datasets: [{
-                        label: 'Випадкове блукання температури',
-                        data: ${JSON.stringify(randomWalkValues)},
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'День'
-                            }
-                        },
-                        y: {
-                            beginAtZero: false,
-                            title: {
-                                display: true,
-                                text: 'Температура (°C)'
-                            }
-                        }
-                    }
-                }
-            });
 
             // Гістограма температур
             const tempHistogramData = ${JSON.stringify(roundedFrequencyHistogram)};
@@ -173,12 +138,11 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
                 data: {
                     labels: Object.keys(cumulativeTempData).sort((a, b) => a - b),
                     datasets: [{
-                        label: 'Кумулятивна гістограма температур',
+                        label: 'Кумулятивна частота температур',
                         data: Object.values(cumulativeTempData).sort((a, b) => a - b),
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1,
-                        fill: false
+                        fill: false,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        tension: 0.1
                     }]
                 },
                 options: {
@@ -200,17 +164,19 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
                 }
             });
 
-            // Гістограма відносної частоти температур
-            const relativeTempData = ${JSON.stringify(relativeFrequencyHistogram)};
+            // Відносна частота
+            const relativeHistogramData = ${JSON.stringify(relativeTempData)};
+            const relativeSortedData = ${JSON.stringify(relativeSortedData)};
+
             new Chart(ctx4, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(relativeTempData).sort((a, b) => a - b),
+                    labels: ${JSON.stringify(tempRange)},
                     datasets: [{
-                        label: 'Гістограма відносної частоти температур',
-                        data: Object.values(relativeTempData).sort((a, b) => a - b),
-                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
+                        label: 'Відносна частота температур',
+                        data: relativeSortedData,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -236,19 +202,18 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
                 }
             });
 
-            // Кумулятивна гістограма відносної частоти температур
-            const cumulativeRelativeTempData = ${JSON.stringify(cumulativeRelativeFrequencyHistogram)};
+            // Кумулятивна відносна частота
+            const cumulativeRelativeData = ${JSON.stringify(cumulativeRelativeFrequencyHistogram)};
             new Chart(ctx5, {
                 type: 'line',
                 data: {
-                    labels: Object.keys(cumulativeRelativeTempData).sort((a, b) => a - b),
+                    labels: Object.keys(cumulativeRelativeData).sort((a, b) => a - b),
                     datasets: [{
-                        label: 'Кумулятивна гістограма відносної частоти температур',
-                        data: Object.values(cumulativeRelativeTempData).sort((a, b) => a - b),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        fill: false
+                        label: 'Кумулятивна відносна частота температур',
+                        data: Object.values(cumulativeRelativeData).sort((a, b) => a - b),
+                        fill: false,
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        tension: 0.1
                     }]
                 },
                 options: {
@@ -274,7 +239,7 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     </html>
     `;
 
-    // Записуємо HTML у файл
+    // Збереження HTML-файлу
     fs.writeFileSync('./output/results.html', chartHTML);
-    console.log("Гістограми були успішно згенеровані у файлі results.html!");
+    console.log('Графіки збережено у output/results.html');
 };
