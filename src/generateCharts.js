@@ -44,18 +44,49 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Гістограми</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .chart-container {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                margin-bottom: 30px;
+            }
+            .chart-box {
+                width: 45%; /* Задаємо ширину для кожного блоку */
+                margin: 10px;
+            }
+            h1, h2 {
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
         <h1>Стахастична модель та гістограми</h1>
         
-        <h2>Симуляція випадкового блукання температури</h2>
-        <canvas id="randomWalkHistogram" width="400" height="200"></canvas>
-        
+        <div>
+            <h2>Симуляція випадкового блукання температури</h2>
+            <canvas id="randomWalkHistogram" width="400" height="200"></canvas>
+        </div>
+
         <h2>Гістограми температур</h2>
-        <canvas id="tempHistogram" width="400" height="200"></canvas>
-        <canvas id="cumulativeTempHistogram" width="400" height="200"></canvas>
-        <canvas id="relativeTempHistogram" width="400" height="200"></canvas>
-        <canvas id="cumulativeRelativeTempHistogram" width="400" height="200"></canvas>
+        <div class="chart-container">
+            <div class="chart-box">
+                <canvas id="tempHistogram" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="cumulativeTempHistogram" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="relativeTempHistogram" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="cumulativeRelativeTempHistogram" width="400" height="200"></canvas>
+            </div>
+        </div>
 
         <script>
             const ctx1 = document.getElementById('randomWalkHistogram').getContext('2d');
