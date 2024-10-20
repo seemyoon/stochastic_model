@@ -4,9 +4,6 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     // Округлення температур до цілих чисел
     const roundedTemperatures = temperatures.map(temp => Math.round(temp));
 
-    // Створюємо діапазон від -10 до 12
-    const tempRange = Array.from({ length: 23 }, (_, i) => -10 + i); // від -10 до 12 включно
-
     // Функція для отримання даних гістограми
     const getHistogramData = (data) => {
         const histogramData = {};
@@ -19,7 +16,7 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     const roundedFrequencyHistogram = getHistogramData(roundedTemperatures);
 
     // Сортуємо дані
-    const sortedRoundedKeys = tempRange.map(key => key.toString());
+    const sortedRoundedKeys = Object.keys(roundedFrequencyHistogram).sort((a, b) => a - b);
     const sortedRoundedValues = sortedRoundedKeys.map(key => roundedFrequencyHistogram[key] || 0);
 
     const chartHTML = `
