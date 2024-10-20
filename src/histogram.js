@@ -5,10 +5,12 @@ export const calculateHistogram = (data) => {
     // Розрахунок гістограми частот
     data.forEach(value => {
         const roundedValue = Math.round(value);
-        if (frequencyHistogram[roundedValue]) {
-            frequencyHistogram[roundedValue]++;
-        } else {
-            frequencyHistogram[roundedValue] = 1;
+        if (!isNaN(roundedValue)) { // Додано перевірку на NaN
+            if (frequencyHistogram[roundedValue]) {
+                frequencyHistogram[roundedValue]++;
+            } else {
+                frequencyHistogram[roundedValue] = 1;
+            }
         }
     });
 

@@ -11,7 +11,9 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     const getHistogramData = (data) => {
         const histogramData = {};
         data.forEach(value => {
-            histogramData[value] = (histogramData[value] || 0) + 1;
+            if (!isNaN(value)) { // Додано перевірку на NaN
+                histogramData[value] = (histogramData[value] || 0) + 1;
+            }
         });
         return histogramData;
     };
@@ -240,5 +242,7 @@ export const generateCharts = (temperatures, randomWalkValues, frequencyHistogra
     </html>
     `;
 
+    // Записуємо HTML у файл
     fs.writeFileSync('./output/results.html', chartHTML);
+    console.log("Гістограми були успішно згенеровані у файлі results.html!");
 };
